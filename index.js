@@ -15,7 +15,11 @@ app.route("/").get((req, res)=>{
 @param : connection is predefined.
 */
 io.on("connection", (socket) => {
-    console.log("【JS】 connect to frontend")
+    console.log("【JS】 connect to frontend");
+    // You have to synchronize first argument to socketio client.
+    socket.on("sendMsg", (data)=> {
+        console.log(data);
+    })
 });
 
 
