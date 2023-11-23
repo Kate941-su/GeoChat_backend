@@ -1,0 +1,1 @@
+export const FIRENDS_ROOM_COLLECTION_NAME = 'friends_room';

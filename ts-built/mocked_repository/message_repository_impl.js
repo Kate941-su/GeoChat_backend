@@ -40,24 +40,22 @@ exports.MessageRepositoryImpl = void 0;
 // Import the functions you need from the SDKs you need
 var app_1 = require("firebase/app");
 var firestore_1 = require("firebase/firestore");
-var firebase_const_1 = require("../firebase_const");
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+var firebase_const_1 = require("../const_value/firebase_const");
+var const_value_1 = require("../const_value/const_value");
 var MessageRepositoryImpl = /** @class */ (function () {
     // Constructor
-    function MessageRepositoryImpl() {
-        // Initialize Firebase
+    function MessageRepositoryImpl(friendsRoomId) {
+        this.frinedsRoomId = "abcdefg";
         this.app = (0, app_1.initializeApp)(firebase_const_1.firebaseConfig);
-        // Get FireStore Instance
         this.firestore = (0, firestore_1.getFirestore)();
-        // Get Firestore Database Project
-        this.specialOfTheDay = (0, firestore_1.doc)(this.firestore, "dailySpecial/2023-11-20");
-        // Define table (like ORM object)
-        this.ordersCollection = (0, firestore_1.collection)(this.firestore, "orders");
+        // this.frinedsRoomId = friendsRoomId;
         console.log(console.log("Hello there, Firestore"));
+        // Get Firestore Database Project
+        console.log("".concat(const_value_1.FIRENDS_ROOM_COLLECTION_NAME, "/").concat(this.frinedsRoomId));
+        this.mockedFriendRoom = (0, firestore_1.doc)(this.firestore, "".concat(const_value_1.FIRENDS_ROOM_COLLECTION_NAME, "/").concat(this.frinedsRoomId));
+        this.messages = (0, firestore_1.collection)(this.firestore, "message/");
     }
+    // Define table (like ORM object)
     // You don't have to put a prefix word 'function' in class.
     // Create Document
     MessageRepositoryImpl.prototype.createDoc = function () {
@@ -72,7 +70,7 @@ var MessageRepositoryImpl = /** @class */ (function () {
                             milk: "Whole",
                             vegan: false,
                         };
-                        return [4 /*yield*/, (0, firestore_1.setDoc)(this.specialOfTheDay, docData, { merge: true })
+                        return [4 /*yield*/, (0, firestore_1.setDoc)(this.mockedFriendRoom, docData, { merge: true })
                                 .then(function () {
                                 console.log("This value has been written to the database");
                             })
@@ -90,15 +88,17 @@ var MessageRepositoryImpl = /** @class */ (function () {
         });
     };
     // Add Document
-    MessageRepositoryImpl.prototype.addSingleDoc = function () {
+    MessageRepositoryImpl.prototype.addMessage = function () {
         return __awaiter(this, void 0, void 0, function () {
             var newDoc;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, (0, firestore_1.addDoc)(this.ordersCollection, {
-                            customer: "Auther",
-                            drink: "Latte",
-                            total_cost: (100 + Math.floor(Math.random() * 400)) / 100,
+                    case 0: return [4 /*yield*/, (0, firestore_1.addDoc)(this.messages, {
+                            friend_room_id: this.frinedsRoomId,
+                            message_id: "dummy_message_id",
+                            message_text: "dummy_text",
+                            sent_datetime: Date.now(),
+                            status: "offline",
                         })
                             .then(function () {
                             console.log("<Add A New Document> has been written to the database");
@@ -113,12 +113,12 @@ var MessageRepositoryImpl = /** @class */ (function () {
             });
         });
     };
-    MessageRepositoryImpl.prototype.readSingleDoc = function () {
+    MessageRepositoryImpl.prototype.readSingleMessage = function () {
         return __awaiter(this, void 0, void 0, function () {
             var mySnapshot, docData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, (0, firestore_1.getDoc)(this.specialOfTheDay)];
+                    case 0: return [4 /*yield*/, (0, firestore_1.getDoc)(this.mockedFriendRoom)];
                     case 1:
                         mySnapshot = _a.sent();
                         if (mySnapshot.exists()) {
@@ -131,8 +131,8 @@ var MessageRepositoryImpl = /** @class */ (function () {
         });
     };
     // Listen to change document on time.
-    MessageRepositoryImpl.prototype.listenDocs = function () {
-        this.dailySpecialUnsubscribe = (0, firestore_1.onSnapshot)(this.specialOfTheDay, function (docSnampShot) {
+    MessageRepositoryImpl.prototype.listenMessages = function () {
+        this.dailySpecialUnsubscribe = (0, firestore_1.onSnapshot)(this.mockedFriendRoom, function (docSnampShot) {
             if (docSnampShot.exists()) {
                 var docData = docSnampShot.data();
                 console.log("In realtime, docData is ".concat(JSON.stringify(docData)));
@@ -143,12 +143,12 @@ var MessageRepositoryImpl = /** @class */ (function () {
         });
     };
     // Quit to listen to change DB change.
-    MessageRepositoryImpl.prototype.cancelSubscription = function () {
+    MessageRepositoryImpl.prototype.cancelSubscriptions = function () {
         this.dailySpecialUnsubscribe();
         this.unsubscribeCustomerOrders();
     };
     // Query for database
-    MessageRepositoryImpl.prototype.queryDocs = function () {
+    MessageRepositoryImpl.prototype.queryMesssages = function () {
         return __awaiter(this, void 0, void 0, function () {
             var customerOrdersQuery;
             return __generator(this, function (_a) {

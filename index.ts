@@ -1,5 +1,3 @@
-import { sampleFunc } from "./playground_folder/sample";
-
 const express = require("express");
 const app = express();
 const http = require("http");
