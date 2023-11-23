@@ -1,1 +1,9 @@
-export const FIRENDS_ROOM_COLLECTION_NAME = 'friends_room';
+const FIRENDS_ROOM_COLLECTION_NAME = 'friends_room';
+const MESSAGE_COLLECTION_NAME = 'message';
+const USER_COLLECTION_NAME = 'user';
+
+module.exports = {
+    FIRENDS_ROOM_COLLECTION_NAME,
+    MESSAGE_COLLECTION_NAME,
+    USER_COLLECTION_NAME,
+}

@@ -1,7 +1,7 @@
 export interface MessageRepository {
   // You may not need to use this function.
   createDoc(): void;
-  addMessage(): void;
+  addMessage(message: Map<string, string>): void;
   readSingleMessage(): void;
   listenMessages(): void;
   cancelSubscriptions(): void;

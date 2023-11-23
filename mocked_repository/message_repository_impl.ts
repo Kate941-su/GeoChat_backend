@@ -20,31 +20,25 @@ import {
 
 import { firebaseConfig } from "../const_value/firebase_const";
 import { MessageRepository } from "./message_repository";
-import { FIRENDS_ROOM_COLLECTION_NAME } from "../const_value/const_value";
 
 export class MessageRepositoryImpl implements MessageRepository {
   // Define Subscriptions To Cancel Lisning Streams When disposed
   dailySpecialUnsubscribe: any;
   unsubscribeCustomerOrders: any;
-  frinedsRoomId: string = "abcdefg";
   app: FirebaseApp;
   firestore: Firestore;
   mockedFriendRoom: DocumentReference;
-  messages: CollectionReference;
+  mockedMessageDatas: DocumentReference;
+  messageCollection: CollectionReference;
 
   // Constructor
-  constructor(friendsRoomId: string) {
+  constructor() {
     this.app = initializeApp(firebaseConfig);
-    this.firestore = getFirestore();
-    // this.frinedsRoomId = friendsRoomId;
+    this.firestore = getFirestore(this.app);
     console.log(console.log("Hello there, Firestore"));
     // Get Firestore Database Project
-    console.log(`${FIRENDS_ROOM_COLLECTION_NAME}/${this.frinedsRoomId}`);
-    this.mockedFriendRoom = doc(
-      this.firestore,
-      `${FIRENDS_ROOM_COLLECTION_NAME}/${this.frinedsRoomId}`
-    );
-    this.messages = collection(this.firestore, "message/");
+    this.mockedMessageDatas = doc(this.firestore, `message/id_here`);
+    this.messageCollection = collection(this.firestore, "message/");
   }
 
   // Define table (like ORM object)
@@ -53,12 +47,13 @@ export class MessageRepositoryImpl implements MessageRepository {
   // Create Document
   async createDoc(): Promise<void> {
     const docData = {
-      description: "A delicious vanilla latte",
-      price: 3.99,
-      milk: "Whole",
-      vegan: false,
+      frined_room_id: "dummy_id",
+      message_id: "dummy_message_id",
+      message_text: "dummy_message_text",
+      sent_datetime: "dummy_time_stamp",
+      status: "dummy_status",
     };
-    await setDoc(this.mockedFriendRoom, docData, { merge: true })
+    await setDoc(this.mockedMessageDatas, docData, { merge: true })
       .then(() => {
         console.log("This value has been written to the database");
       })
@@ -71,14 +66,8 @@ export class MessageRepositoryImpl implements MessageRepository {
   }
 
   // Add Document
-  async addMessage() {
-    const newDoc = await addDoc(this.messages, {
-      friend_room_id: this.frinedsRoomId,
-      message_id: "dummy_message_id",
-      message_text: "dummy_text",
-      sent_datetime: Date.now(),
-      status: "offline",
-    })
+  async addMessage(message: Map<string, string>) {
+    const newDoc = await addDoc(this.messageCollection, message)
       .then(() => {
         console.log("<Add A New Document> has been written to the database");
       })

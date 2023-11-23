@@ -1,0 +1,8 @@
+// message_schema
+{
+    frined_room_id : String,
+    message_id: String,
+    message_text: String,
+    sent_datetime: timeStamp,
+    status: String
+}

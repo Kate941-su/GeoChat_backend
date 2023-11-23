@@ -1,5 +1,7 @@
 import { MessageRepositoryImpl } from "./message_repository_impl";
 
-const messageRepositoryImpl = new MessageRepositoryImpl("");
+const messageRepositoryImpl = new MessageRepositoryImpl();
 console.log("HELLO WORLD!");
-messageRepositoryImpl.addMessage();
+
+// messageRepositoryImpl.createDoc();
+messageRepositoryImpl.createDoc();
